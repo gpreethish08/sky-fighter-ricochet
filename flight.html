@@ -168,21 +168,7 @@ scene.add(new THREE.AmbientLight(0xd4e4ff, 1.4));
 
 const gltfLoader = new GLTFLoader();
 
-// Load City GLB
-gltfLoader.load('procedural_city_7.glb', (gltf) => {
-  const city = gltf.scene;
-  city.scale.set(1.5, 1.5, 1.5);
-  city.position.set(0, 0, 0);
-  scene.add(city);
-}, undefined, () => {});
 
-// Load Mountain GLB
-gltfLoader.load('peak_mountain_hiking_trail.glb', (gltf) => {
-  const mtn = gltf.scene;
-  mtn.scale.set(6, 6, 6);
-  mtn.position.set(-700, -10, -600);
-  scene.add(mtn);
-}, undefined, () => {});
 
 /* distant mountains (calm silhouettes) */
 {
