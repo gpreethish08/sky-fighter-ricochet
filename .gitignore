@@ -1,0 +1,23 @@
+# Godot 4+ specific ignores
+.godot/
+godot_flight_game/.godot/
+
+# Godot-specific ignores
+*.translation
+
+# Mono-specific ignores
+.mono/
+godot_flight_game/.mono/
+data_*/
+mono_crash.*.json
+
+# Large Archives / Backups
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# OS metadata
+.DS_Store
+Thumbs.db
+desktop.ini
