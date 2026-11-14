@@ -10,6 +10,12 @@
 </p>
 
 <p align="center">
+  <a href="https://sky-fighter-ricochet.vercel.app"><b>🎮 PLAY LIVE DEMO</b></a> •
+  <a href="https://github.com/gpreethish08/sky-fighter-ricochet"><b>GitHub Repository</b></a>
+</p>
+
+<p align="center">
+  <a href="https://sky-fighter-ricochet.vercel.app"><img src="https://img.shields.io/badge/Vercel-Live%20Demo-brightgreen?logo=vercel&style=flat-square" alt="Vercel Live"></a>
   <a href="https://github.com/gpreethish08/sky-fighter-ricochet/stargazers"><img src="https://img.shields.io/github/stars/gpreethish08/sky-fighter-ricochet?style=flat-square" alt="Stars"></a>
   <a href="https://github.com/gpreethish08/sky-fighter-ricochet/network/members"><img src="https://img.shields.io/github/forks/gpreethish08/sky-fighter-ricochet?style=flat-square" alt="Forks"></a>
   <a href="https://github.com/gpreethish08/sky-fighter-ricochet/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square" alt="License"></a>
