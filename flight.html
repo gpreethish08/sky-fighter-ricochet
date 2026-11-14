@@ -174,7 +174,7 @@ gltfLoader.load('procedural_city_7.glb', (gltf) => {
   city.scale.set(1.5, 1.5, 1.5);
   city.position.set(0, 0, 0);
   scene.add(city);
-});
+}, undefined, () => {});
 
 // Load Mountain GLB
 gltfLoader.load('peak_mountain_hiking_trail.glb', (gltf) => {
@@ -182,7 +182,7 @@ gltfLoader.load('peak_mountain_hiking_trail.glb', (gltf) => {
   mtn.scale.set(6, 6, 6);
   mtn.position.set(-700, -10, -600);
   scene.add(mtn);
-});
+}, undefined, () => {});
 
 /* distant mountains (calm silhouettes) */
 {
@@ -367,7 +367,7 @@ gltfLoader.load('mcdonnell_douglas_f-15_eagle_fighter_jet.glb', gltf => {
     plane.g.remove(plane.g.children[0]);
   }
   plane.g.add(jet);
-});
+}, undefined, () => {});
 
 /* ---------- enemies ---------- */
 const markersBox=$('markers');
@@ -389,7 +389,7 @@ let su57Template = null;
 gltfLoader.load('su-57_felon_aa_1__russian_air_force_warno.glb', gltf => {
   su57Template = gltf.scene;
   su57Template.scale.set(0.4, 0.4, 0.4);
-});
+}, undefined, () => {});
 
 function spawnEnemy(){
   const f=getFwd(), base=Math.atan2(-f.x,-f.z), a=base+rand(-0.9,0.9), r=rand(260,420);
@@ -648,7 +648,7 @@ function update(dt,rdt){
 function updateVisuals(rdt,now){
   updateParticles(rdt*Math.max(timeScale,0.3)); updateRings(rdt);
   U.uCam.value.copy(camera.position); U.uPlayer.value.copy(player.pos);
-  ground.position.set(camera.position.x,0,camera.position.z); sky.position.copy(camera.position);
+  ground.position.set(camera.position.x,0,camera.position.z);
   shake*=Math.exp(-7*rdt); fovKick*=Math.exp(-6*rdt); hurtV=Math.max(0,hurtV-rdt*1.4); blurKick*=Math.exp(-6*rdt);
   fxPass.uniforms.uHurt.value=hurtV*0.7; fxPass.uniforms.uBlur.value=blurKick;
   if(shellT>0){ shellT-=rdt; const k=clamp(shellT/0.55,0,1); shell.position.copy(player.pos); shell.scale.setScalar(6+(1-k)*58);
@@ -778,62 +778,8 @@ bloom.enabled=GLOW[glowIdx]>0;
 requestAnimationFrame(frame);
 showOverlay('menu');
 </script>
-    <script type="module">
-    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-    import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
-    // Load city model (GLB)
-    const cityLoader = new GLTFLoader();
-    cityLoader.load('procedural_city_7.glb', (gltf) => {
-      const city = gltf.scene;
-      city.scale.set(5,5,5);
-      city.position.set(0,0,0);
-      scene.add(city);
-    });
-    // Load mountain model (GLB)
-    const mountainLoader = new GLTFLoader();
-    mountainLoader.load('peak_mountain_hiking_trail.glb', (gltf) => {
-      const mountain = gltf.scene;
-      mountain.scale.set(8,8,8);
-      mountain.position.set(-800, -10, -1200);
-      scene.add(mountain);
-    });
-    // Load city FBX (optional for detailed buildings)
-    const fbxLoader = new FBXLoader();
-    fbxLoader.load('SanFrancisco_City.FBX/SanFrancisco_City.fbx', (obj) => {
-      obj.scale.set(0.05,0.05,0.05);
-      obj.position.set(500,0,500);
-      scene.add(obj);
-    });
-    </script>
 <script>
   window.addEventListener('load',()=>setTimeout(()=>{ if(!document.querySelector('canvas')) document.getElementById('err').style.display='block'; },2500));
 </script>
-    <script type="module">
-    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-    import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
-    // Load city model (GLB)
-    const cityLoader = new GLTFLoader();
-    cityLoader.load('procedural_city_7.glb', (gltf) => {
-      const city = gltf.scene;
-      city.scale.set(5,5,5);
-      city.position.set(0,0,0);
-      scene.add(city);
-    });
-    // Load mountain model (GLB)
-    const mountainLoader = new GLTFLoader();
-    mountainLoader.load('peak_mountain_hiking_trail.glb', (gltf) => {
-      const mountain = gltf.scene;
-      mountain.scale.set(8,8,8);
-      mountain.position.set(-800, -10, -1200);
-      scene.add(mountain);
-    });
-    // Load city FBX (optional for detailed buildings)
-    const fbxLoader = new FBXLoader();
-    fbxLoader.load('SanFrancisco_City.FBX/SanFrancisco_City.fbx', (obj) => {
-      obj.scale.set(0.05,0.05,0.05);
-      obj.position.set(500,0,500);
-      scene.add(obj);
-    });
-    </script>
 </body>
 </html>
