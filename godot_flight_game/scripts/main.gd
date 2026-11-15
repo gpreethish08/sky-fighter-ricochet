@@ -250,79 +250,19 @@ func _setup_world_environment() -> void:
 			pine.rotation.y = m_data["yaw"]
 			env_root.add_child(pine)
 		else:
-			# Majestic procedural mountain massif with evergreen pine foothills
-			var m_group = Node3D.new()
-			m_group.position = m_data["pos"]
-			m_group.rotation.y = m_data["yaw"]
-
-			# 1. Primary Rugged Peak (Evergreen forest slope with granite ridge)
-			var main_peak = MeshInstance3D.new()
-			var p_mesh = CylinderMesh.new()
-			p_mesh.top_radius = 12.0
-			p_mesh.bottom_radius = 420.0
-			p_mesh.height = 360.0
-			p_mesh.radial_segments = 9 # Stylized faceted mountain look
-			main_peak.mesh = p_mesh
-
+			# Clean procedural green mountain ridge if model is loading
+			var m_cone = MeshInstance3D.new()
+			var c_mesh = CylinderMesh.new()
+			c_mesh.top_radius = 20.0
+			c_mesh.bottom_radius = 280.0
+			c_mesh.height = 240.0
+			m_cone.mesh = c_mesh
 			var m_mat = StandardMaterial3D.new()
-			m_mat.albedo_color = Color(0.13, 0.24, 0.15) # Deep coastal pine green
-			m_mat.roughness = 0.92
-			main_peak.material_override = m_mat
-			main_peak.position = Vector3(0, 160, 0)
-			m_group.add_child(main_peak)
-
-			# 2. Granite Rocky Cap on Summit
-			var cap = MeshInstance3D.new()
-			var cap_mesh = CylinderMesh.new()
-			cap_mesh.top_radius = 4.0
-			cap_mesh.bottom_radius = 95.0
-			cap_mesh.height = 110.0
-			cap_mesh.radial_segments = 7
-			cap.mesh = cap_mesh
-
-			var cap_mat = StandardMaterial3D.new()
-			cap_mat.albedo_color = Color(0.38, 0.40, 0.38) # Granite alpine rock
-			cap_mat.roughness = 0.85
-			cap.material_override = cap_mat
-			cap.position = Vector3(0, 310, 0)
-			m_group.add_child(cap)
-
-			# 3. Flanking Sub-Peaks for natural mountain range silhouette
-			var sub_offsets = [Vector3(-180, 80, -90), Vector3(190, 90, 80)]
-			for s_pos in sub_offsets:
-				var sub_peak = MeshInstance3D.new()
-				var s_mesh = CylinderMesh.new()
-				s_mesh.top_radius = 8.0
-				s_mesh.bottom_radius = 260.0
-				s_mesh.height = 220.0
-				s_mesh.radial_segments = 8
-				sub_peak.mesh = s_mesh
-				sub_peak.material_override = m_mat
-				sub_peak.position = s_pos
-				m_group.add_child(sub_peak)
-
-			# 4. Evergreen Pine Tree Clusters in Foothills facing the city
-			var tree_mat = StandardMaterial3D.new()
-			tree_mat.albedo_color = Color(0.08, 0.20, 0.10) # Dark Douglas fir
-			tree_mat.roughness = 0.95
-
-			var tree_offsets = [
-				Vector3(-90, 15, 120), Vector3(-40, 12, 160), Vector3(20, 14, 140),
-				Vector3(80, 16, 110), Vector3(-130, 20, 80), Vector3(120, 18, 60)
-			]
-			for t_pos in tree_offsets:
-				var tree = MeshInstance3D.new()
-				var t_mesh = CylinderMesh.new()
-				t_mesh.top_radius = 0.5
-				t_mesh.bottom_radius = 18.0
-				t_mesh.height = 42.0
-				t_mesh.radial_segments = 6
-				tree.mesh = t_mesh
-				tree.material_override = tree_mat
-				tree.position = t_pos
-				m_group.add_child(tree)
-
-			env_root.add_child(m_group)
+			m_mat.albedo_color = Color(0.12, 0.28, 0.16)
+			m_mat.roughness = 0.9
+			m_cone.material_override = m_mat
+			m_cone.position = m_data["pos"] + Vector3(0, 110, 0)
+			env_root.add_child(m_cone)
 
 	# 4. BOUNDLESS OCEAN PLACED OUTSIDE & BELOW THE CITY (y = -22.0)
 	var ocean = MeshInstance3D.new()
