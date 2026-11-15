@@ -37,7 +37,11 @@ var is_ace_difficulty: bool = false
 # UI References
 var ui_layer: CanvasLayer
 var title_screen: Control
+var title_start_btn: Button
+var title_diff_btn: Button
+var title_pitch_btn: Button
 var pause_menu: Control
+var pause_resume_btn: Button
 var hud_root: Control
 var corner_menu_btn: Button
 var damage_flash_rect: ColorRect
@@ -292,25 +296,35 @@ func _create_glass_button_style(bg_color: Color = Color(0.06, 0.12, 0.20, 0.88),
 	return sb
 
 func _style_button(btn: Button, accent_color: Color = Color(0.28, 0.88, 1.0)) -> void:
+	btn.process_mode = Node.PROCESS_MODE_ALWAYS
+	btn.mouse_filter = Control.MOUSE_FILTER_STOP
+	btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	btn.focus_mode = Control.FOCUS_ALL
 	var normal_style = _create_glass_button_style(Color(0.06, 0.12, 0.20, 0.88), accent_color)
-	var hover_style = _create_glass_button_style(Color(0.10, 0.22, 0.36, 0.95), Color(0.4, 1.0, 1.0))
-	var pressed_style = _create_glass_button_style(Color(0.16, 0.34, 0.52, 1.0), Color(0.6, 1.0, 1.0))
+	var hover_style = _create_glass_button_style(Color(0.12, 0.24, 0.40, 0.98), Color(0.45, 1.0, 1.0))
+	var pressed_style = _create_glass_button_style(Color(0.18, 0.38, 0.58, 1.0), Color(0.65, 1.0, 1.0))
+	var focus_style = _create_glass_button_style(Color(0.12, 0.24, 0.40, 0.98), Color(0.45, 1.0, 0.85))
 	btn.add_theme_stylebox_override("normal", normal_style)
 	btn.add_theme_stylebox_override("hover", hover_style)
 	btn.add_theme_stylebox_override("pressed", pressed_style)
+	btn.add_theme_stylebox_override("focus", focus_style)
 	btn.add_theme_color_override("font_color", Color(0.92, 0.96, 1.0))
 	btn.add_theme_color_override("font_hover_color", Color(1.0, 1.0, 1.0))
+	btn.add_theme_color_override("font_focus_color", Color(1.0, 1.0, 1.0))
 
 func _build_ui_system() -> void:
 	ui_layer = CanvasLayer.new()
+	ui_layer.process_mode = Node.PROCESS_MODE_ALWAYS
 	add_child(ui_layer)
 
 	var screen_rect = Control.new()
+	screen_rect.process_mode = Node.PROCESS_MODE_ALWAYS
 	screen_rect.set_anchors_preset(Control.PRESET_FULL_RECT)
 	screen_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	ui_layer.add_child(screen_rect)
 
 	damage_flash_rect = ColorRect.new()
+	damage_flash_rect.process_mode = Node.PROCESS_MODE_ALWAYS
 	damage_flash_rect.set_anchors_preset(Control.PRESET_FULL_RECT)
 	damage_flash_rect.color = Color(1.0, 0.05, 0.05, 0.0)
 	damage_flash_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -322,6 +336,7 @@ func _build_ui_system() -> void:
 
 func _build_in_game_hud(parent: Control) -> void:
 	hud_root = Control.new()
+	hud_root.process_mode = Node.PROCESS_MODE_ALWAYS
 	hud_root.set_anchors_preset(Control.PRESET_FULL_RECT)
 	hud_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	parent.add_child(hud_root)
@@ -466,131 +481,161 @@ func _build_in_game_hud(parent: Control) -> void:
 
 func _build_title_screen(parent: Control) -> void:
 	title_screen = Control.new()
+	title_screen.process_mode = Node.PROCESS_MODE_ALWAYS
 	title_screen.set_anchors_preset(Control.PRESET_FULL_RECT)
+	title_screen.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	parent.add_child(title_screen)
 
 	var bg_overlay = ColorRect.new()
+	bg_overlay.process_mode = Node.PROCESS_MODE_ALWAYS
 	bg_overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
 	bg_overlay.color = Color(0.04, 0.07, 0.14, 0.90)
+	bg_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	title_screen.add_child(bg_overlay)
 
+	var center_container = CenterContainer.new()
+	center_container.process_mode = Node.PROCESS_MODE_ALWAYS
+	center_container.set_anchors_preset(Control.PRESET_FULL_RECT)
+	center_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	title_screen.add_child(center_container)
+
 	var center_panel = PanelContainer.new()
-	center_panel.set_anchors_preset(Control.PRESET_CENTER)
+	center_panel.process_mode = Node.PROCESS_MODE_ALWAYS
 	var panel_style = _create_glass_button_style(Color(0.05, 0.09, 0.16, 0.92), Color(0.28, 0.88, 1.0, 0.9))
 	center_panel.add_theme_stylebox_override("panel", panel_style)
 	center_panel.custom_minimum_size = Vector2(620, 480)
-	center_panel.position -= Vector2(310, 240)
-	title_screen.add_child(center_panel)
+	center_panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	center_container.add_child(center_panel)
 
 	var center_box = VBoxContainer.new()
+	center_box.process_mode = Node.PROCESS_MODE_ALWAYS
 	center_box.alignment = BoxContainer.ALIGNMENT_CENTER
+	center_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	center_panel.add_child(center_box)
 
 	var top_badge = Label.new()
 	top_badge.text = "« TOP SECRET // AIR SUPERIORITY TACTICAL DEFENSE »"
 	top_badge.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	top_badge.modulate = Color(0.7, 0.85, 1.0, 0.7)
+	top_badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	center_box.add_child(top_badge)
 
 	var title = Label.new()
 	title.text = "SKY FIGHTER: RICOCHET SKIES"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.modulate = Color(0.4, 0.95, 1.0)
+	title.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	center_box.add_child(title)
 
 	var subtitle = Label.new()
 	subtitle.text = "F-15 EAGLE · SAN FRANCISCO AIRSPACE vs SU-57 FELON"
 	subtitle.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	subtitle.modulate = Color(1.0, 0.55, 0.8)
+	subtitle.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	center_box.add_child(subtitle)
 
 	var spacer1 = Control.new()
 	spacer1.custom_minimum_size.y = 18
+	spacer1.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	center_box.add_child(spacer1)
 
-	var start_btn = Button.new()
-	start_btn.text = "🚀  LAUNCH MISSION / START GAME"
-	start_btn.custom_minimum_size = Vector2(360, 52)
-	_style_button(start_btn, Color(0.2, 0.95, 0.7))
-	start_btn.pressed.connect(_on_start_game_pressed)
-	center_box.add_child(start_btn)
-
-	var diff_btn = Button.new()
-	diff_btn.text = "MODE: EASY (FORGIVING)"
-	diff_btn.custom_minimum_size = Vector2(360, 38)
-	_style_button(diff_btn)
-	diff_btn.pressed.connect(func():
-		is_ace_difficulty = not is_ace_difficulty
-		diff_btn.text = "MODE: ACE (HARD)" if is_ace_difficulty else "MODE: EASY (FORGIVING)"
+	title_start_btn = Button.new()
+	title_start_btn.text = "🚀  LAUNCH MISSION / START GAME"
+	title_start_btn.custom_minimum_size = Vector2(360, 52)
+	_style_button(title_start_btn, Color(0.2, 0.95, 0.7))
+	title_start_btn.pressed.connect(_on_start_game_pressed)
+	title_start_btn.gui_input.connect(func(event: InputEvent):
+		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+			_on_start_game_pressed()
 	)
-	center_box.add_child(diff_btn)
+	center_box.add_child(title_start_btn)
 
-	var pitch_btn = Button.new()
-	pitch_btn.text = "FLIGHT PITCH: NORMAL"
-	pitch_btn.custom_minimum_size = Vector2(360, 38)
-	_style_button(pitch_btn)
-	pitch_btn.pressed.connect(func():
+	title_diff_btn = Button.new()
+	title_diff_btn.text = "MODE: EASY (FORGIVING)"
+	title_diff_btn.custom_minimum_size = Vector2(360, 38)
+	_style_button(title_diff_btn)
+	title_diff_btn.pressed.connect(func():
+		is_ace_difficulty = not is_ace_difficulty
+		title_diff_btn.text = "MODE: ACE (HARD)" if is_ace_difficulty else "MODE: EASY (FORGIVING)"
+	)
+	center_box.add_child(title_diff_btn)
+
+	title_pitch_btn = Button.new()
+	title_pitch_btn.text = "FLIGHT PITCH: NORMAL"
+	title_pitch_btn.custom_minimum_size = Vector2(360, 38)
+	_style_button(title_pitch_btn)
+	title_pitch_btn.pressed.connect(func():
 		if player:
 			player.invert_pitch = not player.invert_pitch
-			pitch_btn.text = "FLIGHT PITCH: INVERTED" if player.invert_pitch else "FLIGHT PITCH: NORMAL"
+			title_pitch_btn.text = "FLIGHT PITCH: INVERTED" if player.invert_pitch else "FLIGHT PITCH: NORMAL"
 	)
-	center_box.add_child(pitch_btn)
+	center_box.add_child(title_pitch_btn)
 
 	var spacer2 = Control.new()
 	spacer2.custom_minimum_size.y = 15
+	spacer2.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	center_box.add_child(spacer2)
 
 	var controls_info = Label.new()
-	controls_info.text = "FLIGHT CONTROLS & WEAPONS:
-• SHOOTING: [Q] KEY (or Left Click / Enter)
-• STEERING: LEFT / RIGHT Arrows (or A / D) to Turn & Bank
-• PITCH: UP / DOWN Arrows (or W / S) to Dive / Climb
-• SHIFT: Boost • CTRL: Air Brake
-• F: Guided Sidewinder Missile • SPACE / RMB: ⚡ BOUNCE PARRY
-• C / V: Toggle Camera • ESC: In-Game Menu"
+	controls_info.text = "FLIGHT CONTROLS & WEAPONS:\n• SHOOTING: [Q] KEY (or Left Click / Enter)\n• STEERING: LEFT / RIGHT Arrows (or A / D) to Turn & Bank\n• PITCH: UP / DOWN Arrows (or W / S) to Dive / Climb\n• SHIFT: Boost • CTRL: Air Brake\n• F: Guided Sidewinder Missile • SPACE / RMB: ⚡ BOUNCE PARRY\n• C / V: Toggle Camera • ESC: In-Game Menu"
 	controls_info.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	controls_info.modulate = Color(0.75, 0.88, 1.0, 0.85)
+	controls_info.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	center_box.add_child(controls_info)
 
 func _build_pause_menu(parent: Control) -> void:
 	pause_menu = Control.new()
+	pause_menu.process_mode = Node.PROCESS_MODE_ALWAYS
 	pause_menu.set_anchors_preset(Control.PRESET_FULL_RECT)
+	pause_menu.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	pause_menu.visible = false
 	parent.add_child(pause_menu)
 
 	var dim_rect = ColorRect.new()
+	dim_rect.process_mode = Node.PROCESS_MODE_ALWAYS
 	dim_rect.set_anchors_preset(Control.PRESET_FULL_RECT)
 	dim_rect.color = Color(0.02, 0.05, 0.1, 0.88)
+	dim_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	pause_menu.add_child(dim_rect)
 
+	var center_container = CenterContainer.new()
+	center_container.process_mode = Node.PROCESS_MODE_ALWAYS
+	center_container.set_anchors_preset(Control.PRESET_FULL_RECT)
+	center_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	pause_menu.add_child(center_container)
+
 	var p_panel = PanelContainer.new()
-	p_panel.set_anchors_preset(Control.PRESET_CENTER)
+	p_panel.process_mode = Node.PROCESS_MODE_ALWAYS
 	var panel_style = _create_glass_button_style(Color(0.05, 0.09, 0.16, 0.95), Color(0.28, 0.88, 1.0, 0.9))
 	p_panel.add_theme_stylebox_override("panel", panel_style)
 	p_panel.custom_minimum_size = Vector2(380, 360)
-	p_panel.position -= Vector2(190, 180)
-	pause_menu.add_child(p_panel)
+	p_panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	center_container.add_child(p_panel)
 
 	var box = VBoxContainer.new()
+	box.process_mode = Node.PROCESS_MODE_ALWAYS
 	box.alignment = BoxContainer.ALIGNMENT_CENTER
+	box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	p_panel.add_child(box)
 
 	var title = Label.new()
 	title.text = "MISSION PAUSED"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.modulate = Color(0.4, 0.95, 1.0)
+	title.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(title)
 
 	var spacer = Control.new()
 	spacer.custom_minimum_size.y = 16
+	spacer.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(spacer)
 
-	var resume_btn = Button.new()
-	resume_btn.text = "▶  RESUME FLIGHT"
-	resume_btn.custom_minimum_size.y = 42
-	_style_button(resume_btn, Color(0.2, 0.95, 0.7))
-	resume_btn.pressed.connect(_resume_game)
-	box.add_child(resume_btn)
+	pause_resume_btn = Button.new()
+	pause_resume_btn.text = "▶  RESUME FLIGHT"
+	pause_resume_btn.custom_minimum_size.y = 42
+	_style_button(pause_resume_btn, Color(0.2, 0.95, 0.7))
+	pause_resume_btn.pressed.connect(_resume_game)
+	box.add_child(pause_resume_btn)
 
 	var restart_btn = Button.new()
 	restart_btn.text = "🔄  RESTART MISSION"
@@ -631,6 +676,7 @@ func _on_start_game_pressed() -> void:
 	hud_root.visible = true
 	state = GameState.PLAYING
 	get_tree().paused = false
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	if player and player.has_method("respawn"):
 		player.respawn()
 	_start_wave(1)
@@ -645,11 +691,17 @@ func _pause_game() -> void:
 	state = GameState.PAUSED
 	pause_menu.visible = true
 	get_tree().paused = true
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	if pause_resume_btn:
+		pause_resume_btn.call_deferred("grab_focus")
 
 func _resume_game() -> void:
 	state = GameState.PLAYING
 	pause_menu.visible = false
+	title_screen.visible = false
+	hud_root.visible = true
 	get_tree().paused = false
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
 func _restart_mission() -> void:
 	for m in missiles:
@@ -678,11 +730,26 @@ func _show_title_screen() -> void:
 	pause_menu.visible = false
 	hud_root.visible = false
 	get_tree().paused = true
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	if title_start_btn:
+		title_start_btn.call_deferred("grab_focus")
+
+func _input(event: InputEvent) -> void:
+	if state == GameState.TITLE:
+		if event is InputEventKey and event.pressed and not event.echo:
+			if event.keycode == KEY_ENTER or event.keycode == KEY_KP_ENTER or event.keycode == KEY_SPACE:
+				get_viewport().set_input_as_handled()
+				_on_start_game_pressed()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel") or (event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE):
 		if state == GameState.PLAYING:
 			_pause_game()
+		elif state == GameState.PAUSED:
+			_resume_game()
+	elif event.is_action_pressed("ui_accept") or (event is InputEventKey and event.pressed and (event.keycode == KEY_ENTER or event.keycode == KEY_KP_ENTER or event.keycode == KEY_SPACE)):
+		if state == GameState.TITLE:
+			_on_start_game_pressed()
 		elif state == GameState.PAUSED:
 			_resume_game()
 
